@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout Form with Validation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    form {
+      display: grid;
+      gap: 10px;
+    }
+
+    input, textarea {
+      padding: 5px;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 0.8em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Checkout Form</h1>
+  <form id="checkoutForm">
+    <label for="fullName">Full Name:</label>
+    <input type="text" id="fullName" name="fullName" pattern="^[a-zA-Z\s]+$" required>
+    <span class="error-message"></span>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    <span class="error-message"></span>
+
+    <label for="shippingAddress">Shipping Address:</label>
+    <textarea id="shippingAddress" name="shippingAddress" pattern="^[a-zA-Z0-9,.\s-]+$" required></textarea>
+    <span class="error-message"></span>
+
+    <label for="creditCardNumber">Credit Card Number:</label>
+    <input type="text" id="creditCardNumber" name="creditCardNumber" pattern="^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$" required>
+    <span class="error-message"></span>
+
+    <label for="cvv">CVV:</label>
+    <input type="text" id="cvv" name="cvv" pattern="^\d{3,4}$" required>
+    <span class="error-message"></span>
+
+    <label for="expirationDate">Expiration Date:</label>
+    <input type="text" id="expirationDate" name="expirationDate" pattern="^(0[1-9]|1[0-2])\/\d{2}$" required>
+    <span class="error-message"></span>
+
+    <button type="submit">Submit Order</button>
+  </form>
+
+  <script>
+    const form = document.getElementById('checkoutForm');
+    const errorMessages = document.querySelectorAll('.error-message');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      validateForm();
+    });
+
+    function validateForm() {
+      clearErrorMessages();
+
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const shippingAddress = document.getElementById('shippingAddress').value.trim();
+      const creditCardNumber = document.getElementById('creditCardNumber').value.trim();
+      const cvv = document.getElementById('cvv').value.trim();
+      const expirationDate = document.getElementById('expirationDate').value.trim();
+
+      const nameRegex = /^[a-zA-Z\s]+$/;
+      const addressRegex = /^[a-zA-Z0-9,.\s-]+$/;
+      const creditCardRegex = /^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/;
+      const cvvRegex = /^\d{3,4}$/;
+      const expirationDateRegex = /^(0[1-9]|1[0-2])\/\d{2}$/;
+
+      if (!nameRegex.test(fullName)) {
+        setErrorMessage(0, 'Please enter a valid name (letters and spaces only)');
+      }
+
+      if (!email.includes('@')) {
+        setErrorMessage(1, 'Please enter a valid email address');
+      }
+
+      if (!addressRegex.test(shippingAddress)) {
+        setErrorMessage(2, 'Please enter a valid shipping address (alphanumeric characters, commas, periods, and hyphens allowed)');
+      }
+
+      if (!creditCardRegex.test(creditCardNumber)) {
+        setErrorMessage(3, 'Please enter a valid credit card number');
+      }
+
+      if (!cvvRegex.test(cvv)) {
+        setErrorMessage(4, 'Please enter a valid CVV (3 or 4 digits)');
+      }
+
+      if (!expirationDateRegex.test(expirationDate)) {
+        setErrorMessage(5, 'Please enter a valid expiration date (MM/YY)');
+      }
+    }
+
+    function setErrorMessage(index, message) {
+      errorMessages[index].textContent = message;
+    }
+
+    function clearErrorMessages() {
+      errorMessages.forEach((message) => {
+        message.textContent = '';
+      });
+    }
+  </script>
+</body>
+</html>
